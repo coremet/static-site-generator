@@ -1,5 +1,5 @@
 import unittest
-from inline_func import split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link
+from inline_func import split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link, text_to_textnodes
 from textnode import TextNode, TextType
 
 class TestTextNode(unittest.TestCase):
@@ -149,7 +149,48 @@ class TestTextNode(unittest.TestCase):
             new_nodes
             )
 
+#text to textnodes
+    def test_text_to_textnodes1(self):
+        text = "This is **text** with an _italic_ word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
+        old_node = TextNode(text, TextType.TEXT)
+        new_nodes = [
+            TextNode("This is ", TextType.TEXT),
+            TextNode("text", TextType.BOLD),
+            TextNode(" with an ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" word and a ", TextType.TEXT),
+            TextNode("code block", TextType.CODE),
+            TextNode(" and an ", TextType.TEXT),
+            TextNode("obi wan image", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode(" and a ", TextType.TEXT),
+            TextNode("link", TextType.LINK, "https://boot.dev")
+        ]
+        self.assertEqual(text_to_textnodes(old_node.text), new_nodes)
 
+    def test_text_to_textnodes2(self):
+        text = "This is just some plain text"
+        old_node = TextNode(text, TextType.TEXT)
+        new_nodes = [TextNode("This is just some plain text", TextType.TEXT)]
+        self.assertEqual(text_to_textnodes(old_node.text), new_nodes)
+
+    def test_text_to_textnodes3(self):
+        text = "This is an _italic_ word in a text"
+        old_node = TextNode(text, TextType.TEXT)
+        new_nodes = [
+            TextNode("This is an ", TextType.TEXT),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" word in a text", TextType.TEXT)
+            ]
+        self.assertEqual(text_to_textnodes(old_node.text), new_nodes)
+
+    def test_text_to_textnodes4(self):
+        text = "**Bold** start to a sentence"
+        old_node = TextNode(text, TextType.TEXT)
+        new_nodes = [
+            TextNode("Bold", TextType.BOLD),
+            TextNode(" start to a sentence", TextType.TEXT)
+            ]
+        self.assertEqual(text_to_textnodes(old_node.text), new_nodes)
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,6 +1,7 @@
 from enum import Enum
 from htmlnode import LeafNode
 
+
 class TextType(Enum):
     TEXT = "text"
     BOLD = "bold"
@@ -44,4 +45,3 @@ def text_node_to_html_node(text_node: TextNode) -> LeafNode:
             "alt": f"{text_node.text}"})
     else:
         raise Exception("TextNode does not match a TextType")
-
