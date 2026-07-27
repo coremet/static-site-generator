@@ -28,7 +28,7 @@ class TextNode:
     def __repr__(self) -> str:
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
 
-def text_node_to_html_node(text_node: TextNode) -> LeafNode:
+def textnode_to_htmlnode(text_node: TextNode) -> LeafNode:
     if text_node.text_type == TextType.TEXT:
         return LeafNode(None, f"{text_node.text}")
     elif text_node.text_type == TextType.BOLD:
