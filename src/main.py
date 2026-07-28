@@ -1,15 +1,7 @@
-from textnode import TextNode, TextType
+from copy_static import copy_static
 
 def main():
-    def create_dummy_node():
-        return TextNode(
-            text="This is some anchor text",
-            text_type=TextType.LINK,
-            url="https://www.boot.dev"
-        )
-
-    dummy_node = create_dummy_node()
-    print(dummy_node)
-
+    copy_static("static", "public")
+    
 if __name__ == "__main__":
     main()
