@@ -12,8 +12,9 @@ def generate_page(basepath, from_path, template_path, dest_path):
     htmlstr = htmlnodes_list.to_html()
     with open(template_path, "r", encoding="utf-8") as f:
             template_file_content = f.read()
-    basepath_in_template = template_file_content.replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
-    final_template = basepath_in_template.replace("{{ Title }}", title).replace("{{ Content }}", htmlstr)
+    template = template_file_content.replace("{{ Title }}", title).replace("{{ Content }}", htmlstr)
+    final_template = template.replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
+   
     # dest_path is already the full file path, e.g. "public/index.html"
     # Make sure the parent directory exists (the folder, not the file)
     dest_dir = os.path.dirname(dest_path)
