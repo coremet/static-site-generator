@@ -22,3 +22,13 @@ def generate_page(from_path, template_path, dest_path):
     # Write to the file
     with open(dest_path, "w", encoding="utf-8") as file:
         file.write(content_in_template)
+
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    for root, dirs, files in os.walk(dir_path_content):
+        for filename in files:
+            if filename.endswith(".md"):
+        # Combine root and file name to get the absolute path
+                src_path = os.path.join(root, filename)
+                rel_path = os.path.relpath(root, dir_path_content)
+                dest_path = os.path.join(dest_dir_path, rel_path, filename.replace(".md", ".html"))
+                generate_page(src_path, template_path, dest_path)
