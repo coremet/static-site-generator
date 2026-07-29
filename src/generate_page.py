@@ -3,7 +3,7 @@ from extract_title import extract_title
 import os
 
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(basepath, from_path, template_path, dest_path):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     with open(from_path, "r", encoding="utf-8") as f:
         md_file_content = f.read()
@@ -12,8 +12,8 @@ def generate_page(from_path, template_path, dest_path):
     htmlstr = htmlnodes_list.to_html()
     with open(template_path, "r", encoding="utf-8") as f:
             template_file_content = f.read()
-    title_in_template = template_file_content.replace("{{ Title }}", title)
-    content_in_template = title_in_template.replace("{{ Content }}", htmlstr)
+    basepath_in_template = template_file_content.replace('href="/', f'href="{basepath}').replace('src="/', f'src="{basepath}')
+    final_template = basepath_in_template.replace("{{ Title }}", title).replace("{{ Content }}", htmlstr)
     # dest_path is already the full file path, e.g. "public/index.html"
     # Make sure the parent directory exists (the folder, not the file)
     dest_dir = os.path.dirname(dest_path)
@@ -21,9 +21,9 @@ def generate_page(from_path, template_path, dest_path):
         os.makedirs(dest_dir, exist_ok=True)
     # Write to the file
     with open(dest_path, "w", encoding="utf-8") as file:
-        file.write(content_in_template)
+        file.write(final_template)
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(basepath, dir_path_content, template_path, dest_dir_path):
     for root, dirs, files in os.walk(dir_path_content):
         for filename in files:
             if filename.endswith(".md"):
@@ -31,4 +31,4 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
                 src_path = os.path.join(root, filename)
                 rel_path = os.path.relpath(root, dir_path_content)
                 dest_path = os.path.join(dest_dir_path, rel_path, filename.replace(".md", ".html"))
-                generate_page(src_path, template_path, dest_path)
+                generate_page(basepath, src_path, template_path, dest_path)
